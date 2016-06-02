@@ -38,12 +38,15 @@ e.g. if you want to make the side bar larger, you'd need to increase #side-bar a
 	    height: 100%;
 	    min-height: 100%;
 	} 
- 
-##Screnshots
-[[https://github.com/pthivierge/PI-Coresight-ERD/blob/master/Screenshots/Initial.png|alt=no-image]]
 
 
-##Getting Started
+
+
+**[Screenshots][1]**
+
+
+### Getting Started
+
 This project is created with a visual studio solution.  There is nothing compiled, it is just to make use of IIS express that is bundled with visual studio.  This makes things easier when using JavaScript that needs to make use of files served by a web server.  The environment is also convenient to use.
 
 ### constants in script.js
@@ -82,3 +85,6 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+
+[1]:https://github.com/pthivierge/PI-Coresight-ERD/wiki

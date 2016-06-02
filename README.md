@@ -12,6 +12,8 @@ Depending on the type of display selected, the page that is showed when an eleme
 - A Coresight ProcessBook Display
 
 
+
+
 The html layout is a very simple, it uses **fixed** divs.  Fixed means that element is relative to the browser window. So the relevant part of the css is as follow:
 
 e.g. if you want to make the side bar larger, you'd need to increase #side-bar and #side-bar-status width and and decrease #content width.
@@ -37,6 +39,9 @@ e.g. if you want to make the side bar larger, you'd need to increase #side-bar a
 	    min-height: 100%;
 	} 
  
+##Screnshots
+[[https://github.com/pthivierge/PI-Coresight-ERD/blob/master/Screenshots/Initial.png|alt=no-image]]
+
 
 ##Getting Started
 This project is created with a visual studio solution.  There is nothing compiled, it is just to make use of IIS express that is bundled with visual studio.  This makes things easier when using JavaScript that needs to make use of files served by a web server.  The environment is also convenient to use.

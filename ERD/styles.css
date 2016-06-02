@@ -1,0 +1,43 @@
+﻿
+#side-bar {
+    position: fixed;
+    width: 15%;
+    height: 90%;
+    overflow: auto;
+    background: #F1F1F1;
+    border-right: #9A9A9A solid thin;
+    padding: 0.5em;
+
+}
+
+#side-bar-buttons {
+    text-align: right;
+}
+
+
+#side-bar-tree {
+    margin-top: 1em;
+}
+
+#side-bar-status {
+    border: none;
+    position: fixed;
+    background: #F1F1F1;
+    border-right: #9A9A9A solid thin;
+    height: 10%;
+    width: 15%;
+    top: 90%;
+    padding: 0.5em;
+    
+}
+
+
+/* iframe itself */
+#content > iframe {
+    left: 15%;
+    position: fixed;
+    width: 85%;
+    height: 100%;
+    min-height: 100%;
+    overflow: auto;
+}

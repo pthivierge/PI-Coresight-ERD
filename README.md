@@ -76,6 +76,14 @@ Make sure you also look at the method **populateDisplaySelection** to add Displa
 
         }
 
+##Docker
+
+sudo git clone https://github.com/pthivierge/PI-Coresight-ERD.git /www
+cd /www
+docker build -t coresight-erd /www
+docker run -it --rm --name coresight-erd coresight-erd
+
+
 ##License
 
 Copyright 2016 Patrice Thivierge Fortin 
@@ -88,3 +96,5 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 
 [1]:https://github.com/pthivierge/PI-Coresight-ERD/wiki
+
+

@@ -81,7 +81,7 @@ Make sure you also look at the method **populateDisplaySelection** to add Displa
 sudo git clone https://github.com/pthivierge/PI-Coresight-ERD.git /www
 cd /www
 docker build -t coresight-erd /www
-docker run -it --rm --name coresight-erd coresight-erd
+docker run -it --rm -p 80:80 --name coresight-erd coresight-erd
 
 
 ##License

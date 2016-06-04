@@ -43,6 +43,7 @@
           //'ngRoute',
           'ngStorage',
           //'ngTable',
+          'ui.bootstrap',
 
           // Custom modules 
           'angularBootstrapNavTree'
@@ -54,28 +55,25 @@
 
     // DEFINES THE ANGULAR CONTROLLER THAT WILL KEEP TRACK OF OUR TREE
     app.controller('treeCtrl', treeCtrl);
-    treeCtrl.$inject = ["$scope", "piWebApiHttpService", "$localStorage", "$sce", "$http"]; // this technique, using inject, make sure that the js will work even if it is minified later on.
-    function treeCtrl($scope, piWebApiHttpService, $localStorage, $sce, $http) {
-
-
-
-
-
+    treeCtrl.$inject = ["$scope", "piWebApiHttpService", "$localStorage", "$sce", "$http", "$uibModal"]; // this technique, using inject, make sure that the js will work even if it is minified later on.
+    function treeCtrl($scope, piWebApiHttpService, $localStorage, $sce, $http, $uibModal) {
+        
 
         function init() {
 
-            // initializes the tree data structure
-
-            $scope.elements_tree = {}; // this object is a reference to the abn-tree.  it allows to controll it programmatically.
+            // scope variables initialization
+            $scope.elements_tree = {};                                               // this object is a reference to the abn-tree.  it allows to controll it programmatically.
             $scope.currentIframePage = $sce.trustAsResourceUrl('no-selection.html'); // page that is displayed by the iframe
-
-            // currentIframePage need to be set using the $sce.trustAsResourceUrl.  This is related to security.
+            /*
+                Note:
+                currentIframePage need to be set using the $sce.trustAsResourceUrl.  This is related to security.
+            */
 
             // initializes the piWebApiHttpService by setting the url of pi web api as well as the authentication setting
             piWebApiHttpService.SetPIWebAPIServiceUrl(PI_WEB_API_URL);
             piWebApiHttpService.SetAPIAuthentication("Kerberos", "", "");
 
-
+            // fills the combo box
             populateDisplaySelection();
 
             // if local storage is used, the AF Data will not be re-queried to build the tree each time page is refreshed.
@@ -90,11 +88,10 @@
                 $scope.treeData = $scope.$storage.treeData;
                 $scope.selectedDisplay = $scope.$storage.selectedDisplay;
 
-                
 
-
-
-               // setting the display select in the combo box
+                // setting the display select in the combo box
+                // todo fix this code ... should not be so hard!!
+                // need to implement a generic way to make init... 
                 if ($scope.selectedDisplay.DisplayName === undefined) {
                     $scope.selectedDisplay = $scope.displays[0];
                 } else {
@@ -127,15 +124,7 @@
                         console.error('Error when trying to initialize the tree. See error content for details.', e);
                     });
             }
-
-
-          
-
-            
-
-
         }
-
 
         //--------------------------------------------------------
         // fills the Displays to show combo box
@@ -150,7 +139,6 @@
             $scope.displays.push(createDisplay("Boilers", 10003));
 
         }
-
 
         //--------------------------------------------------------
         // build the tree
@@ -169,9 +157,6 @@
                     $scope.treeData.push(root);
                 });
         }
-
-
-
 
         //--------------------------------------------------------
         // recursive function to get tree childs
@@ -192,8 +177,6 @@
 
 
                 });
-
-
         }
 
         //--------------------------------------------------------
@@ -233,12 +216,9 @@
             // stores current selections, if browser is refreshed, last content will be displayed again
             $scope.$storage.selectedNode = node;
             $scope.$storage.selectedDisplay = $scope.selectedDisplay;
-            
+
             var elementPath = node.data.Path;
            
-
-
-
             var uri = "";
             if ($scope.selectedDisplay.DisplayId <= 0) {
 
@@ -259,9 +239,9 @@
         }
         $scope.nodeSelected = nodeSelected; // makes this function visible to the controller in the html page.
 
-
-
-
+        //--------------------------------------------------------
+        // creates a display object
+        //--------------------------------------------------------
         function createDisplay(name, id) {
             var display = {};
             display.DisplayName = name;
@@ -269,10 +249,44 @@
             return display;
         }
 
+        $scope.openConfiguration = function () {
+
+            var modalInstance = $uibModal.open({
+                animation: true,
+                templateUrl: 'modal.html',
+                controller: 'modalConfigCtrl',
+                size: 'lg',
+                resolve: {
+                    items: function () {
+                        return 'hey this is selected';
+                    }
+                }
+            });
+
+            modalInstance.result
+                .then(null)
+                .catch(function () {console.info('Modal dismissed at: ' + new Date());
+            });
+        };
+
 
         init();
-
-
     }
+
+    // controller for the modal configuration window
+    angular.module('app').controller('modalConfigCtrl',modalConfigCtrl);
+    modalConfigCtrl.$inject = ['$scope', '$uibModalInstance', "$localStorage", "items"];
+    function modalConfigCtrl($scope, $uibModalInstance, $localStorage, items) {
+
+        $scope.selectedDisplay = items;
+
+        $scope.ok = function () {
+            $uibModalInstance.close();
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+        };
+    };
 
 })();

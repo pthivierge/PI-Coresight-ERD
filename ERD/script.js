@@ -21,17 +21,15 @@
     // You will need to change these settings for your environment
 
     //AF_ELEMENTS_PATH determines the rooth path from wich the tree will be built
-    var AF_ELEMENTS_PATH = '\\\\MEGATRON\\NuGreen\\NuGreen';
+    var AF_ELEMENTS_PATH = '\\\\PIDEMO2016\\NuGreen\\NuGreen';
 
     // PI_WEB_API_URL determines what is the path to PI web API
-    var PI_WEB_API_URL = 'https://megatron/piwebapi/';
+    var PI_WEB_API_URL = 'https://pidemo2016.demo.fra/piwebapi/';
+    var PI_CORESIGHT_URL = 'http://pics2016.demo.fra:777/Coresight/';
 
-    var PI_CORESIGHT_URL = 'http://megatron/Coresight/';
-
-    var USE_LOCAL_STORAGE = true;
-
- 
-
+    // default setting, this can also be change in the app settings, and those change will be persisted until cache is cleared
+    var USE_LOCAL_STORAGE = false;
+    
 
     // Application startup
 
@@ -61,6 +59,14 @@
 
         function init() {
 
+            // initializes the localstorage if it does not exist
+            $scope.$storage = $localStorage.$default({
+                treeData: [],
+                selectedDisplay: {},
+                useLocalStorage: USE_LOCAL_STORAGE
+
+            });
+
             // scope variables initialization
             $scope.elements_tree = {};                                               // this object is a reference to the abn-tree.  it allows to controll it programmatically.
             $scope.currentIframePage = $sce.trustAsResourceUrl('no-selection.html'); // page that is displayed by the iframe
@@ -77,12 +83,8 @@
             populateDisplaySelection();
 
             // if local storage is used, the AF Data will not be re-queried to build the tree each time page is refreshed.
-            if (USE_LOCAL_STORAGE) {
-                // initializes the localstorage if it does not exist
-                $scope.$storage = $localStorage.$default({
-                    treeData: [],
-                    selectedDisplay:{}
-                });
+            if ($scope.$storage.useLocalStorage===true) {
+               
 
                 $scope.$storage = $localStorage;
                 $scope.treeData = $scope.$storage.treeData;
@@ -213,9 +215,13 @@
         //--------------------------------------------------------
         function nodeSelected(node) {
           
-            // stores current selections, if browser is refreshed, last content will be displayed again
-            $scope.$storage.selectedNode = node;
-            $scope.$storage.selectedDisplay = $scope.selectedDisplay;
+            if ($scope.$storage.useLocalStorage === true) {
+
+                // if using local storage:
+                // stores current selections, if browser is refreshed, last content will be displayed again
+                $scope.$storage.selectedNode = node;
+                $scope.$storage.selectedDisplay = $scope.selectedDisplay;
+            }
 
             var elementPath = node.data.Path;
            
@@ -257,16 +263,28 @@
                 controller: 'modalConfigCtrl',
                 size: 'lg',
                 resolve: {
-                    items: function () {
-                        return 'hey this is selected';
+                    displaysList: function () {
+                        return $scope.displays;
+                    },
+
+                    currentDisplay: function() {
+                        return $scope.selectedDisplay;
                     }
                 }
             });
 
             modalInstance.result
-                .then(null)
-                .catch(function () {console.info('Modal dismissed at: ' + new Date());
-            });
+                .then(
+                    function(selectedDisplay) {
+                        $scope.selectedDisplay = selectedDisplay;
+                        console.log("display configuration changed to", selectedDisplay);
+                        if ($scope.$storage.useLocalStorage === true)
+                         {
+                            $scope.$storage.selectedDisplay = $scope.selectedDisplay;
+                        }
+                    },
+                    function() { console.info('Modal dismissed at: ' + new Date()); });
+
         };
 
 
@@ -275,18 +293,40 @@
 
     // controller for the modal configuration window
     angular.module('app').controller('modalConfigCtrl',modalConfigCtrl);
-    modalConfigCtrl.$inject = ['$scope', '$uibModalInstance', "$localStorage", "items"];
-    function modalConfigCtrl($scope, $uibModalInstance, $localStorage, items) {
+    modalConfigCtrl.$inject = ['$scope', '$uibModalInstance', "$localStorage", "displaysList", "currentDisplay"];
+    function modalConfigCtrl($scope, $uibModalInstance, $localStorage, displaysList, currentDisplay) {
 
-        $scope.selectedDisplay = items;
+        // initializes the localstorage if it does not exist
+        $scope.$storage = $localStorage.$default({
+            treeData: [],
+            selectedDisplay: {},
+            useLocalStorage: USE_LOCAL_STORAGE
+        });
+
+        $scope.displays = displaysList;
+        $scope.selection = currentDisplay;
+        $scope.useLocalStorage = $scope.$storage.useLocalStorage;
 
         $scope.ok = function () {
-            $uibModalInstance.close();
+
+            if ($scope.$storage.useLocalStorage !== $scope.useLocalStorage) {
+                $localStorage.useLocalStorage = $scope.useLocalStorage;
+                console.log("changed useLocalStorage option to ", $scope.useLocalStorage);
+            }
+            
+            
+
+            $uibModalInstance.close($scope.selection);
         };
 
         $scope.cancel = function () {
             $uibModalInstance.dismiss('cancel');
         };
+
+        $scope.clearCache=function() {
+            $localStorage.$reset();
+            console.log("cache cleared");
+        }
     };
 
 })();

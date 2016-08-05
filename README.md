@@ -5,11 +5,14 @@ This project consist in an html page that contains:
 
 - A treeview at the left, to select an element.  elements are loaded in the tree by using PI Web API.
 - An Iframe, to display PI Coresight Page
-- A combobox / select, to choose what is the PI Coresight Display that will be displayed when clicking on a node.
 
-Depending on the type of display selected, the page that is showed when an element is selected can be either
-- A Coresight AdHoc Display
-- A Coresight ProcessBook Display
+In the configuration page:
+- A combobox / select, to choose what is the PI Coresight Display that will be displayed when clicking on a node. Depending on the type of display selected, the page that is showed when an element is selected can be either
+	- A Coresight AdHoc Display
+	- A Coresight ProcessBook Display
+
+- Settings to enable or disable local storage that will avoid PI Web API calls if the tree is already loaded.  Cache can also be cleared.
+
 
 
 
@@ -77,6 +80,8 @@ Make sure you also look at the method **populateDisplaySelection** to add Displa
         }
 
 ##Docker
+
+If you know a little about docker, this line allows you to start your environment with the latest version of this code on github.
 
 sudo git clone https://github.com/pthivierge/PI-Coresight-ERD.git /www
 cd /www

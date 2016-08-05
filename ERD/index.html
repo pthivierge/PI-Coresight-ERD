@@ -66,7 +66,7 @@ https://github.com/nickperkinslondon/angular-bootstrap-nav-tree
     </div>
 
     <div id="content">
-        <iframe ng-cloak src="{{currentIframePage}}"></iframe>
+        <iframe ng-src="{{currentIframePage}}"></iframe>
     </div>
 
     <!--scripts-->
@@ -80,7 +80,15 @@ https://github.com/nickperkinslondon/angular-bootstrap-nav-tree
         <div class="modal-body">
             <label>Display to show </label> <span title="Ideally you want to select a display that was built using the Element Relative Display feature, so when you select a different element, the data will change at the same time." class="badge btn-primary"><span class="fa fa-info"></span></span>
             <br />
-            <select style="width: 100%" ng-model="selectedDisplay" ng-options="display as display.DisplayName for display in displays"></select>
+            <select style="width: 100%" ng-model="selection" ng-options="display as display.DisplayName for display in displays"></select>
+            <p>
+                <label>Use Local Storage to store the elements structure locally </label><br />
+                <input type="checkbox" ng-model="useLocalStorage" />Check to enable local storage
+            </p>
+            <p>
+                <label>Clear the content of the local storage for this application </label><br />
+                <button class="btn btn-danger" type="button" ng-click="clearCache()">Clear</button>
+            </p>
         </div>
         <div class="modal-footer">
             <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
@@ -90,7 +98,7 @@ https://github.com/nickperkinslondon/angular-bootstrap-nav-tree
           
         </div>
         
-        {{selectedDisplay}}
+        {{selection}}
     </div>
 
     
